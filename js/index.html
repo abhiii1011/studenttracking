@@ -1,0 +1,120 @@
+/* Project Structure:
+   - index.html (Login Page)
+   - dashboard.html (Student Dashboard with Records)
+   - styles.css (CSS Styling)
+   - script.js (JavaScript Functions)
+*/
+
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Tracking System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Enter Username" required>
+        <input type="password" id="password" placeholder="Enter Password" required>
+        <button onclick="login()">Login</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+<!-- dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Student Dashboard</h2>
+        <p>Welcome, <span id="studentName"></span>!</p>
+        <h3>Student Records</h3>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Marks</th>
+                <th>Attendance</th>
+            </tr>
+            <tbody id="studentTable"></tbody>
+        </table>
+        <button onclick="logout()">Logout</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+<!-- styles.css -->
+<style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; text-align: center; }
+    .container { width: 400px; margin: auto; padding: 20px; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    input, button { width: 100%; margin: 10px 0; padding: 10px; }
+    button { background: #28a745; color: white; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+</style>
+
+<!-- script.js -->
+<script>
+    const students = [
+        { id: 1, name: "John Doe", marks: "85", attendance: "Present" },
+        { id: 2, name: "Jane Smith", marks: "92", attendance: "Absent" }
+    ];
+
+    function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        if (username === "student1" && password === "1234") {
+            localStorage.setItem("loggedIn", true);
+            localStorage.setItem("studentName", "John Doe");
+            window.location.href = "dashboard.html";
+        } else if (username === "student2" && password === "5678") {
+            localStorage.setItem("loggedIn", true);
+            localStorage.setItem("studentName", "Jane Smith");
+            window.location.href = "dashboard.html";
+        } else {
+            alert("Invalid credentials!");
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem("loggedIn");
+        localStorage.removeItem("studentName");
+        window.location.href = "index.html";
+    }
+
+    function loadStudents() {
+        const studentName = localStorage.getItem("studentName");
+        if (!studentName) {
+            window.location.href = "index.html";
+            return;
+        }
+        document.getElementById("studentName").innerText = studentName;
+        const table = document.getElementById("studentTable");
+        students.forEach(student => {
+            if (student.name === studentName) {
+                let row = `<tr>
+                    <td>${student.id}</td>
+                    <td>${student.name}</td>
+                    <td>${student.marks}</td>
+                    <td>${student.attendance}</td>
+                </tr>`;
+                table.innerHTML += row;
+            }
+        });
+    }
+
+    if (window.location.pathname.includes("dashboard.html")) {
+        loadStudents();
+    }
+</script>
